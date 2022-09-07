@@ -25,16 +25,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import com.ffait.util.*;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
-import com.ffait.util.DownloadFromUrl;
-import com.ffait.util.ImageUtils;
-import com.ffait.util.JsonToObject;
-import com.ffait.util.NewPDF;
-import com.ffait.util.ParameterOperate;
-import com.ffait.util.PrintFrame;
 import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 
@@ -214,6 +209,7 @@ public class ReportFrame {
 			Mat frame = new Mat();
 			while (flag == 0) {
 				camera.read(frame);
+				BufferedImage bufferedImage = ImageBlur.gausssianBlur(frame);
 				BufferedImage bi = fs.mat2BI(frame);
 				long currenttime = System.currentTimeMillis();
 				if (currenttime - pretime > 10000 && state) {
@@ -384,10 +380,8 @@ public class ReportFrame {
 				}
 				
 				showImg = ImageUtils.deepCopy(bi);
-                
-                ImageUtils.drawFace(showImg);
-                
-                lblCrame.setIcon(new ImageIcon(showImg));
+				ImageBlur.drawFace(bufferedImage,showImg.getSubimage(350,190,270,340));
+				lblCrame.setIcon(new ImageIcon(bufferedImage));
 			}
 		}
 	}
